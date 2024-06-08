@@ -4,6 +4,7 @@ import "fmt"
 
 const (
 	ErrFailedToList   = "failed to list %s"
+	ErrFailedToGet    = "failed to get %s"
 	ErrFailedToCreate = "failed to create %s"
 	ErrFailedToUpdate = "failed to update %s"
 	ErrFailedToDelete = "failed to delete %s"
@@ -16,6 +17,9 @@ const (
 
 func FailedToList(entity string) string {
 	return fmt.Sprintf(ErrFailedToList, entity)
+}
+func FailedToGet(entity string) string {
+	return fmt.Sprintf(ErrFailedToGet, entity)
 }
 
 func FailedToCreate(entity string) string {
