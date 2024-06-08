@@ -141,7 +141,7 @@ paths:
       summary: Add a new receiver
       tags:
       - receiver
-  /receiver/{id}:
+  /receiver/{uuid}:
     delete:
       consumes:
       - application/json
@@ -149,9 +149,9 @@ paths:
       parameters:
       - description: UUID
         in: path
-        name: id
+        name: uuid
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -172,13 +172,13 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get details of a receiver with the given ID
+      description: Get details of a receiver with the given UUID
       parameters:
       - description: UUID
         in: path
-        name: id
+        name: uuid
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -199,13 +199,13 @@ paths:
     patch:
       consumes:
       - application/json
-      description: Update a receiver with the given ID
+      description: Update a receiver with the given UUID
       parameters:
       - description: UUID
         in: path
-        name: id
+        name: uuid
         required: true
-        type: integer
+        type: string
       - description: Receiver
         in: body
         name: receiver

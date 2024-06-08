@@ -142,6 +142,6 @@ func (r ReceiverRepositoryMock) HardDelete(uid uuid.UUID) error {
 }
 
 func (r *ReceiverRepositoryMock) BulkDelete(strings []string) error {
-	//TODO implement me
+
 	panic("implement me")
 }

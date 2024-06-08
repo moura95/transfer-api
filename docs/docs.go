@@ -150,9 +150,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/receiver/{id}": {
+        "/receiver/{uuid}": {
             "get": {
-                "description": "Get details of a receiver with the given ID",
+                "description": "Get details of a receiver with the given UUID",
                 "consumes": [
                     "application/json"
                 ],
@@ -165,9 +165,9 @@ const docTemplate = `{
                 "summary": "Get a receiver by UUID",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "UUID",
-                        "name": "id",
+                        "name": "uuid",
                         "in": "path",
                         "required": true
                     }
@@ -206,9 +206,9 @@ const docTemplate = `{
                 "summary": "delete a receiver by UUID",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "UUID",
-                        "name": "id",
+                        "name": "uuid",
                         "in": "path",
                         "required": true
                     }
@@ -234,7 +234,7 @@ const docTemplate = `{
                 }
             },
             "patch": {
-                "description": "Update a receiver with the given ID",
+                "description": "Update a receiver with the given UUID",
                 "consumes": [
                     "application/json"
                 ],
@@ -247,9 +247,9 @@ const docTemplate = `{
                 "summary": "Update a receiver",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "UUID",
-                        "name": "id",
+                        "name": "uuid",
                         "in": "path",
                         "required": true
                     },

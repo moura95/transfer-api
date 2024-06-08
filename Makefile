@@ -34,5 +34,8 @@ restart:
 	sleep 10
 	make migrate-up
 	go run cmd/main.go
+swag:
+	swag init -g cmd/main.go
 
-.PHONY: migrate-up migrate-down migrate-create down up sqlc start run restart
+
+.PHONY: migrate-up migrate-down migrate-create down up sqlc start run restart swag
