@@ -7,7 +7,7 @@ import (
 	"github.com/moura95/transferapi/config"
 	"github.com/moura95/transferapi/internal/entity"
 	receiverrepo "github.com/moura95/transferapi/internal/repository/receiversrepo"
-	"github.com/moura95/transferapi/pkg/response"
+	"github.com/moura95/transferapi/pkg/ginx"
 	"go.uber.org/zap"
 )
 
@@ -75,12 +75,12 @@ func (s *Service) BulkDelete(uuids []string) error {
 	return nil
 }
 
-func (s *Service) List(filters map[string]string) ([]entity.Receiver, httpresponse.PageInfo, error) {
+func (s *Service) List(filters map[string]string) ([]entity.Receiver, ginx.PageInfo, error) {
 	res, err := s.repository.GetAll(filters)
 	if err != nil {
-		return []entity.Receiver{}, httpresponse.PageInfo{}, fmt.Errorf("failed to get receiver %s", err.Error())
+		return []entity.Receiver{}, ginx.PageInfo{}, fmt.Errorf("failed to get receiver %s", err.Error())
 	}
-	pageInfo := httpresponse.NewPageInfo(res.Limit, res.TotalRecords, res.CurrentPage, res.TotalPages)
+	pageInfo := ginx.NewPageInfo(res.Limit, res.TotalRecords, res.CurrentPage, res.TotalPages)
 	return res.Receivers, pageInfo, nil
 }
 

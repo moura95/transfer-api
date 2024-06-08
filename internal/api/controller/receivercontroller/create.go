@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/moura95/transferapi/internal/dto"
 	"github.com/moura95/transferapi/pkg/ginx"
-	httpRes "github.com/moura95/transferapi/pkg/response"
 )
 
 // @Summary Add a new receiver
@@ -32,9 +31,9 @@ func (r *Receiver) create(ctx *gin.Context) {
 	err = r.service.Create(req.Name, req.PixKeyType, req.PixKey, req.Email, req.CpfCnpj)
 	if err != nil {
 		r.logger.Error(err)
-		ctx.JSON(http.StatusInternalServerError, httpRes.ErrorResponse(err.Error()))
+		ctx.JSON(http.StatusInternalServerError, ginx.ErrorResponse(err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, httpRes.SuccessResponse("Ok"))
+	ctx.JSON(http.StatusCreated, ginx.SuccessResponse("Ok"))
 }

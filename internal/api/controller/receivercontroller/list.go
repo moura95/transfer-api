@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/moura95/transferapi/internal/dto"
 	"github.com/moura95/transferapi/pkg/errors"
-	httpRes "github.com/moura95/transferapi/pkg/response"
+	"github.com/moura95/transferapi/pkg/ginx"
 )
 
 // @Summary List all receivers
@@ -32,7 +32,7 @@ func (r *Receiver) list(c *gin.Context) {
 
 	if err != nil {
 		r.logger.Error(err)
-		c.JSON(http.StatusInternalServerError, httpRes.ErrorResponse(errors.FailedToList("Receivers")))
+		c.JSON(http.StatusInternalServerError, ginx.ErrorResponse(errors.FailedToList("Receivers")))
 		return
 	}
 
@@ -50,5 +50,5 @@ func (r *Receiver) list(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, httpRes.SuccessResponseWithPageInfo(response, pageinfo))
+	c.JSON(http.StatusOK, ginx.SuccessResponseWithPageInfo(response, pageinfo))
 }

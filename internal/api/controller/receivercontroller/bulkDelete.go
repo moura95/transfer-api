@@ -7,7 +7,6 @@ import (
 	"github.com/moura95/transferapi/internal/dto"
 	"github.com/moura95/transferapi/pkg/errors"
 	"github.com/moura95/transferapi/pkg/ginx"
-	httpRes "github.com/moura95/transferapi/pkg/response"
 )
 
 // @Summary Bulk Delete receiver
@@ -27,16 +26,16 @@ func (r *Receiver) bulkDelete(ctx *gin.Context) {
 	err := ginx.ParseJSON(ctx, &req)
 	if err != nil {
 		r.logger.Error(err)
-		ctx.JSON(http.StatusBadRequest, httpRes.ErrorResponse(err.Error()))
+		ctx.JSON(http.StatusBadRequest, ginx.ErrorResponse(err.Error()))
 		return
 	}
 
 	err = r.service.BulkDelete(req.Uuids)
 	if err != nil {
 		r.logger.Error(err)
-		ctx.JSON(http.StatusInternalServerError, httpRes.ErrorResponse(errors.FailedToDelete("Receiver")))
+		ctx.JSON(http.StatusInternalServerError, ginx.ErrorResponse(errors.FailedToDelete("Receiver")))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, httpRes.SuccessResponse("Ok"))
+	ctx.JSON(http.StatusOK, ginx.SuccessResponse("Ok"))
 }

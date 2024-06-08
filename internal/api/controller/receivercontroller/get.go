@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/moura95/transferapi/internal/dto"
 	"github.com/moura95/transferapi/pkg/errors"
-	httpRes "github.com/moura95/transferapi/pkg/response"
+	"github.com/moura95/transferapi/pkg/ginx"
 )
 
 // @Summary Get a receiver by UUID
@@ -27,14 +27,14 @@ func (r *Receiver) get(ctx *gin.Context) {
 	uid, err := uuid.Parse(param)
 	if err != nil {
 		r.logger.Error(err)
-		ctx.JSON(http.StatusBadRequest, httpRes.ErrorResponse("uuid invalid"))
+		ctx.JSON(http.StatusBadRequest, ginx.ErrorResponse("uuid invalid"))
 		return
 	}
 
 	receiver, err := r.service.GetByID(uid)
 	if err != nil {
 		r.logger.Error(err)
-		ctx.JSON(http.StatusInternalServerError, httpRes.ErrorResponse(errors.FailedToGet("Receiver")))
+		ctx.JSON(http.StatusInternalServerError, ginx.ErrorResponse(errors.FailedToGet("Receiver")))
 		return
 	}
 
@@ -48,5 +48,5 @@ func (r *Receiver) get(ctx *gin.Context) {
 		Status:     receiver.Status,
 	}
 
-	ctx.JSON(http.StatusOK, httpRes.SuccessResponse(response))
+	ctx.JSON(http.StatusOK, ginx.SuccessResponse(response))
 }

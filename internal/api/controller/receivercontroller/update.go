@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/moura95/transferapi/internal/dto"
 	"github.com/moura95/transferapi/pkg/ginx"
-	httpRes "github.com/moura95/transferapi/pkg/response"
 )
 
 // @Summary Update a receiver
@@ -36,14 +35,14 @@ func (r *Receiver) update(ctx *gin.Context) {
 	uid, err := uuid.Parse(param)
 	if err != nil {
 		r.logger.Error(err)
-		ctx.JSON(http.StatusBadRequest, httpRes.ErrorResponse("uuid invalid"))
+		ctx.JSON(http.StatusBadRequest, ginx.ErrorResponse("uuid invalid"))
 		return
 	}
 
 	err = r.service.Update(uid, req.Name, req.PixKeyType, req.PixKey, req.Email, req.CpfCnpj)
 	if err != nil {
 		r.logger.Error(err)
-		ctx.JSON(http.StatusInternalServerError, httpRes.ErrorResponse(err.Error()))
+		ctx.JSON(http.StatusInternalServerError, ginx.ErrorResponse(err.Error()))
 		return
 	}
 
