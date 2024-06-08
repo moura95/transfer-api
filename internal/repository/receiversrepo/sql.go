@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -27,16 +28,29 @@ func NewReceiverRepository(db *sqlx.DB, log *zap.SugaredLogger) IReceiverReposit
 	return &ReceiverRepository{db: db, logger: log}
 }
 
-func (r ReceiverRepository) GetAll() ([]entity.Receiver, error) {
+func (r ReceiverRepository) GetAll(filters map[string]string) ([]entity.Receiver, error) {
+	defaultLimit := 10
+	defaultOffset := 0
+
+	limit, err := strconv.Atoi(filters["limit"])
+	if err != nil || limit <= 0 {
+		limit = defaultLimit
+	}
+
+	offset, err := strconv.Atoi(filters["offset"])
+	if err != nil || offset < 0 {
+		offset = defaultOffset
+	}
+
+	query := "SELECT uuid, name, pix_key_type, pix_key, email, cpf_cnpj, status FROM receivers ORDER BY name LIMIT $1 OFFSET $2"
 	var receivers []ReceiverModel
-	query := "SELECT * FROM receivers"
-	if err := r.db.Select(&receivers, query); err != nil {
-		return []entity.Receiver{}, err
+	if err := r.db.Select(&receivers, query, limit, offset); err != nil {
+		return nil, err
 	}
 
 	var receiversEntity []entity.Receiver
 	for _, receiver := range receivers {
-		receiversEntity = append(receiversEntity, *entity.NewReceiver(receiver.Uuid, receiver.Name, receiver.PixKeyType, receiver.PixKey, receiver.Email, receiver.CpfCnpj, receiver.Status))
+		receiversEntity = append(receiversEntity, *entity.ToEntity(receiver.Uuid, receiver.Name, receiver.PixKeyType, receiver.PixKey, receiver.Email, receiver.CpfCnpj, receiver.Status))
 	}
 	return receiversEntity, nil
 }
