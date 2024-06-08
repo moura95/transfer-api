@@ -52,6 +52,23 @@ func (c *Receiver) Validate() error {
 	return nil
 }
 
+func (r *Receiver) ValidateUpdate() error {
+	if r.Status == "Validado" {
+		if r.Name != "" {
+			return errors.New("cannot update the name when status is 'Validado'")
+		}
+		if r.CpfCnpj != "" {
+			return errors.New("cannot update the CPF/CNPJ when status is 'Validado'")
+		}
+		if r.PixKeyType != "" {
+			return errors.New("cannot update the PixKeyType when status is 'Validado'")
+		}
+		if r.PixKey != "" {
+			return errors.New("cannot update the PixKey when status is 'Validado'")
+		}
+	}
+	return nil
+}
 func validateCPFCNPJ(cpfCnpj string) bool {
 	var valid bool
 	if len(cpfCnpj) == 11 {

@@ -24,6 +24,9 @@ func NewReceiverRouter(s *receiverservice.Service, log *zap.SugaredLogger) *Rece
 
 func (r *Receiver) SetupReceiverRoute(routers *gin.RouterGroup) {
 	routers.GET("/receiver", r.list)
+	routers.GET("/receiver/:uuid", r.get)
+	routers.DELETE("/receiver/:uuid", r.hardDelete)
 	routers.POST("/receiver", r.create)
-
+	routers.PATCH("/bulk-delete/receiver", r.bulkDelete)
+	routers.PATCH("/receiver/:uuid", r.update)
 }

@@ -10,4 +10,6 @@ type IReceiverRepository interface {
 	Create(receiver entity.Receiver) error
 	GetByID(uuid.UUID) (*entity.Receiver, error)
 	Update(uuid.UUID, *entity.Receiver) error
+	HardDelete(uid uuid.UUID) error
+	BulkDelete([]string) error
 }

@@ -32,5 +32,5 @@ type ReceiverOutputDto struct {
 }
 
 type DeleteReceiverInputDto struct {
-	Uuids []uuid.UUID `json:"uuids"`
+	Uuids []string `json:"uuids"`
 }
