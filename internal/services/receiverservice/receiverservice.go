@@ -24,14 +24,19 @@ func NewReceiverService(repo receiverrepo.IReceiverRepository, cfg config.Config
 	}
 }
 
-func (s *Service) Create(name, email, taxId string) error {
-	dr := entity.NewReceiver(name)
-	err := dr.Validate()
+const (
+	statusRascunho = "Rascunho"
+	statusValidado = "Validado"
+)
+
+func (s *Service) Create(name, pixKeyType, pixKey, email, CpfCnpj string) error {
+	rv := entity.NewReceiver(uuid.New(), name, pixKeyType, pixKey, email, CpfCnpj, statusRascunho)
+	err := rv.Validate()
 	if err != nil {
 		return err
 	}
 
-	err = s.repository.Create(*dr)
+	err = s.repository.Create(*rv)
 	if err != nil {
 		return fmt.Errorf("failed to create %s", err.Error())
 	}
@@ -52,6 +57,23 @@ func (s *Service) GetByID(uid uuid.UUID) (*entity.Receiver, error) {
 	return receiver, nil
 }
 
+func (s *Service) Delete(uid uuid.UUID) error {
+	err := s.repository.HardDelete(uid)
+	if err != nil {
+		return fmt.Errorf("failed to get receiver %s", err.Error())
+	}
+
+	return nil
+}
+func (s *Service) BulkDelete(uuids []string) error {
+	err := s.repository.BulkDelete(uuids)
+	if err != nil {
+		return fmt.Errorf("failed to get receiver %s", err.Error())
+	}
+
+	return nil
+}
+
 func (s *Service) List() ([]entity.Receiver, error) {
 	receivers, err := s.repository.GetAll()
 	if err != nil {
@@ -60,9 +82,18 @@ func (s *Service) List() ([]entity.Receiver, error) {
 	return receivers, nil
 }
 
-func (s *Service) Update(uid uuid.UUID, name, email, taxId string) error {
-	dr := entity.NewReceiver(name)
-	err := s.repository.Update(uid, dr)
+func (s *Service) Update(uid uuid.UUID, name, pixKeyType, pixKey, email, CpfCnpj string) error {
+	rec, err := s.repository.GetByID(uid)
+
+	if err != nil {
+		return fmt.Errorf("failed to get receiver %s", err.Error())
+	}
+	receiver := entity.NewReceiver(uid, name, pixKeyType, pixKey, email, CpfCnpj, rec.Status)
+	err = receiver.ValidateUpdate()
+	if err != nil {
+		return err
+	}
+	err = s.repository.Update(uid, receiver)
 	if err != nil {
 		return fmt.Errorf("failed to update receiver %s", err.Error())
 	}
