@@ -10,16 +10,18 @@ import (
 type Receiver struct {
 	Uuid       uuid.UUID
 	Name       string
-	Cpf        string
+	CpfCnpj    string
 	PixKeyType string
 	PixKey     string
 	Email      string
 	Status     string
 }
 
-func NewReceiver(Name, PixKeyType, PixKey, Email, Status string) *Receiver {
+func NewReceiver(Uuid uuid.UUID, Name, PixKeyType, PixKey, Email, CpfCnpj, Status string) *Receiver {
 	return &Receiver{
+		Uuid:       Uuid,
 		Name:       Name,
+		CpfCnpj:    CpfCnpj,
 		PixKeyType: PixKeyType,
 		PixKey:     PixKey,
 		Email:      Email,
@@ -32,7 +34,7 @@ func (c *Receiver) Validate() error {
 	if c.Name == "" {
 		return errors.New("name is required")
 	}
-	if validateCPFCNPJ(c.Cpf) == false {
+	if validateCPFCNPJ(c.CpfCnpj) == false {
 		return errors.New("cpf/cpnj invalid")
 	}
 
@@ -45,10 +47,6 @@ func (c *Receiver) Validate() error {
 	}
 	if validatePixKey(c.PixKey, c.PixKeyType) == false {
 		return errors.New("invalid pix key")
-	}
-
-	if c.Status == "" {
-		return errors.New("status is required")
 	}
 
 	return nil
