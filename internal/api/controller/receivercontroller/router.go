@@ -24,5 +24,6 @@ func NewReceiverRouter(s *receiverservice.Service, log *zap.SugaredLogger) *Rece
 
 func (r *Receiver) SetupReceiverRoute(routers *gin.RouterGroup) {
 	routers.GET("/receiver", r.list)
+	routers.POST("/receiver", r.create)
 
 }
