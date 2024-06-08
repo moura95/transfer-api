@@ -1,10 +1,10 @@
 # Golang Transfer Api
 
 
-![img](doc/db_image.png)
+![img](docs/db_diagram.png)
 
 ##  Download Collection Postman
-doc/collection.json
+docs/collection.json
 
 ## Run
 
@@ -41,3 +41,8 @@ Running Tests
 ```bash
 go test -cover ./...
 ```
+
+Swagger
+http://localhost:8080/swagger/index.html
+
+![img](docs/swagger.png)
