@@ -6,7 +6,7 @@ import (
 )
 
 type IReceiverRepository interface {
-	GetAll(filters map[string]string) (response *GetAllResponse, err error)
+	GetAll(filters entity.Filter) (response *GetAllResponse, err error)
 	Create(receiver entity.Receiver) error
 	GetByID(uuid.UUID) (*entity.Receiver, error)
 	Update(uuid.UUID, *entity.Receiver) error

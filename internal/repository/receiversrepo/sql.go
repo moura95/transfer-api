@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -18,11 +17,6 @@ type ReceiverRepository struct {
 	db     *sqlx.DB
 	logger *zap.SugaredLogger
 }
-
-const (
-	statusRascunho = "Rascunho"
-	statusValidado = "Validado"
-)
 
 func NewReceiverRepository(db *sqlx.DB, log *zap.SugaredLogger) IReceiverRepository {
 	return &ReceiverRepository{db: db, logger: log}
@@ -48,34 +42,48 @@ type GetAllResponse struct {
 	Limit        int
 }
 
-func (r ReceiverRepository) GetAll(filters map[string]string) (*GetAllResponse, error) {
+func (r ReceiverRepository) GetAll(filters entity.Filter) (*GetAllResponse, error) {
 	var response GetAllResponse
 	defaultLimit := 10
-	limit, err := strconv.Atoi(filters["limit"])
-	if err != nil || limit <= 0 {
-		limit = defaultLimit
-	}
+	query := "SELECT uuid, name, pix_key_type, pix_key, email, cpf_cnpj, status FROM receivers WHERE 1 = 1 "
 
-	page, err := strconv.Atoi(filters["page"])
-	if err != nil || page < 1 {
-		page = 1
+	if filters.Limit <= 0 {
+		filters.Limit = defaultLimit
 	}
+	if filters.Page < 1 {
+		filters.Page = 1
+	}
+	if filters.Name != "" {
+		query += " AND name ILIKE '%" + filters.Name + "%'"
+	}
+	if filters.Status != "" {
+		query += " AND status ILIKE '" + filters.Status + "'"
+	}
+	if filters.PixKeyType != "" {
+		query += " AND pix_key_type ILIKE '" + filters.PixKeyType + "'"
+	}
+	if filters.PixKeyValue != "" {
+		query += " AND pix_key ILIKE '" + filters.PixKeyValue + "'"
+	}
+	// remove the last 'AND'
+	query = strings.TrimSuffix(query, " AND")
+	queryOrderBy := " ORDER BY name LIMIT $1 OFFSET $2 "
+	query = query + queryOrderBy
 
-	offset := (page - 1) * limit
+	offset := (filters.Page - 1) * filters.Limit
 
 	queryCount := "SELECT COUNT(*) FROM receivers"
-	err = r.db.Get(&response.TotalRecords, queryCount)
+	err := r.db.Get(&response.TotalRecords, queryCount)
 	if err != nil {
 		return nil, err
 	}
 
-	response.TotalPages = (response.TotalRecords + limit - 1) / limit
-	response.CurrentPage = page
-	response.Limit = limit
+	response.TotalPages = (response.TotalRecords + filters.Limit - 1) / filters.Limit
+	response.CurrentPage = filters.Page
+	response.Limit = filters.Limit
 
-	query := "SELECT uuid, name, pix_key_type, pix_key, email, cpf_cnpj, status FROM receivers ORDER BY name LIMIT $1 OFFSET $2"
 	var receiverModels []ReceiverModel
-	if err := r.db.Select(&receiverModels, query, limit, offset); err != nil {
+	if err := r.db.Select(&receiverModels, query, filters.Limit, offset); err != nil {
 		return nil, err
 	}
 

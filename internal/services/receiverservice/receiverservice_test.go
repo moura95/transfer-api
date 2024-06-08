@@ -37,11 +37,11 @@ func TestCreateReceiver(t *testing.T) {
 func TestGetAll(t *testing.T) {
 	mockRepo := receiverrepo.NewMockReceiverRepository()
 	service := NewReceiverServiceTest(mockRepo)
-	filters := map[string]string{
-		"limit": "10",
-	}
 
-	receivers, _, err := service.List(filters)
+	receivers, _, err := service.List(ListRequest{
+		Status: "Validado",
+		Limit:  20,
+	})
 	if err != nil {
 		t.Error("Failed to list")
 	}

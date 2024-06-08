@@ -2,7 +2,6 @@ package receiverrepo
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/moura95/transferapi/internal/entity"
@@ -65,36 +64,35 @@ func NewMockReceiverRepository() *ReceiverRepositoryMock {
 	}
 }
 
-func (r *ReceiverRepositoryMock) GetAll(filters map[string]string) (receivers []entity.Receiver, totalRecords, currentPage, totalPages int, err error) {
+func (r *ReceiverRepositoryMock) GetAll(filters entity.Filter) (*GetAllResponse, error) {
+	var response GetAllResponse
 	defaultLimit := 10
 
-	limit, err := strconv.Atoi(filters["limit"])
-	if err != nil || limit <= 0 {
-		limit = defaultLimit
+	if filters.Limit <= 0 {
+		filters.Limit = defaultLimit
 	}
 
-	page, err := strconv.Atoi(filters["page"])
-	if err != nil || page < 1 {
-		page = 1
+	if filters.Page < 1 {
+		filters.Page = 1
 	}
 
-	offset := (page - 1) * limit
-	totalRecords = len(r.receivers)
-	totalPages = (totalRecords + limit - 1) / limit
-	currentPage = page
+	offset := (filters.Page - 1) * filters.Limit
+	response.TotalRecords = len(r.receivers)
+	response.TotalPages = (response.TotalRecords + filters.Limit - 1) / filters.Limit
+	response.CurrentPage = filters.Page
 
-	if offset > totalRecords {
-		return nil, totalRecords, currentPage, totalPages, errors.New("page number out of range")
+	if offset > response.TotalRecords {
+		return &response, errors.New("page number out of range")
 	}
 
-	end := offset + limit
-	if end > totalRecords {
-		end = totalRecords
+	end := offset + filters.Limit
+	if end > response.TotalRecords {
+		end = response.TotalRecords
 	}
 
-	receivers = r.receivers[offset:end]
+	response.Receivers = r.receivers[offset:end]
 
-	return receivers, totalRecords, currentPage, totalPages, nil
+	return &response, nil
 }
 
 func (r *ReceiverRepositoryMock) Create(receiver entity.Receiver) error {

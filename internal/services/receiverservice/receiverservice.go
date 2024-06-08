@@ -75,8 +75,24 @@ func (s *Service) BulkDelete(uuids []string) error {
 	return nil
 }
 
-func (s *Service) List(filters map[string]string) ([]entity.Receiver, ginx.PageInfo, error) {
-	res, err := s.repository.GetAll(filters)
+type ListRequest struct {
+	Status      string
+	Name        string
+	PixKeyType  string
+	PixKeyValue string
+	Limit       int
+	Page        int
+}
+
+func (s *Service) List(filters ListRequest) ([]entity.Receiver, ginx.PageInfo, error) {
+	res, err := s.repository.GetAll(entity.Filter{
+		Status:      filters.Status,
+		Name:        filters.Name,
+		PixKeyType:  filters.PixKeyType,
+		PixKeyValue: filters.PixKeyValue,
+		Limit:       filters.Limit,
+		Page:        filters.Page,
+	})
 	if err != nil {
 		return []entity.Receiver{}, ginx.PageInfo{}, fmt.Errorf("failed to get receiver %s", err.Error())
 	}
