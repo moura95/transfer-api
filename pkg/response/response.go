@@ -1,4 +1,4 @@
-package response
+package httpresponse
 
 type Response struct {
 	Error    interface{} `json:"error"`

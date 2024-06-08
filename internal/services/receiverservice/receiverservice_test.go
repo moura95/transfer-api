@@ -17,7 +17,7 @@ func NewReceiverServiceTest(repo receiverrepo.IReceiverRepository) *Service {
 }
 
 func TestCreateReceiver(t *testing.T) {
-	mockRepo := receiverrepo.NewMemoryReceiverRepository()
+	mockRepo := receiverrepo.NewMockReceiverRepository()
 	service := NewReceiverServiceTest(mockRepo)
 
 	receiverInstance := entity.NewReceiver(uuid.New(), "Recebedor 1", "CPF", "12345678921", "driver1@example.com", "12345678901", statusRascunho)
@@ -35,7 +35,7 @@ func TestCreateReceiver(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	mockRepo := receiverrepo.NewMemoryReceiverRepository()
+	mockRepo := receiverrepo.NewMockReceiverRepository()
 	service := NewReceiverServiceTest(mockRepo)
 	filters := map[string]string{
 		"limit": "10",
@@ -56,7 +56,7 @@ func TestGetAll(t *testing.T) {
 }
 
 func TestGetByID(t *testing.T) {
-	mockRepo := receiverrepo.NewMemoryReceiverRepository()
+	mockRepo := receiverrepo.NewMockReceiverRepository()
 	service := NewReceiverServiceTest(mockRepo)
 
 	uid := uuid.MustParse("66cfbbed-e3f8-4f2a-935d-665a368a915e")
@@ -75,7 +75,7 @@ func TestGetByID(t *testing.T) {
 }
 
 func TestUpdateReceiverRascunho(t *testing.T) {
-	mockRepo := receiverrepo.NewMemoryReceiverRepository()
+	mockRepo := receiverrepo.NewMockReceiverRepository()
 	service := NewReceiverServiceTest(mockRepo)
 
 	uid := uuid.MustParse("796bb798-a29e-4271-9e70-f5c065374257")
@@ -88,7 +88,7 @@ func TestUpdateReceiverRascunho(t *testing.T) {
 }
 
 func TestUpdateReceiverValidatorSuccess(t *testing.T) {
-	mockRepo := receiverrepo.NewMemoryReceiverRepository()
+	mockRepo := receiverrepo.NewMockReceiverRepository()
 	service := NewReceiverServiceTest(mockRepo)
 
 	uid := uuid.MustParse("3ee27437-fdb6-48ce-85f4-0b16e046c82a")
@@ -101,7 +101,7 @@ func TestUpdateReceiverValidatorSuccess(t *testing.T) {
 }
 
 func TestUpdateReceiverValidatorFailed(t *testing.T) {
-	mockRepo := receiverrepo.NewMemoryReceiverRepository()
+	mockRepo := receiverrepo.NewMockReceiverRepository()
 	service := NewReceiverServiceTest(mockRepo)
 
 	uid := uuid.MustParse("3ee27437-fdb6-48ce-85f4-0b16e046c82a")
@@ -111,7 +111,7 @@ func TestUpdateReceiverValidatorFailed(t *testing.T) {
 }
 
 func TestHardDelete(t *testing.T) {
-	mockRepo := receiverrepo.NewMemoryReceiverRepository()
+	mockRepo := receiverrepo.NewMockReceiverRepository()
 	service := NewReceiverServiceTest(mockRepo)
 
 	uid := uuid.MustParse("3ee27437-fdb6-48ce-85f4-0b16e046c82a")

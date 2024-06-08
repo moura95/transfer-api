@@ -28,9 +28,29 @@ func NewReceiverRepository(db *sqlx.DB, log *zap.SugaredLogger) IReceiverReposit
 	return &ReceiverRepository{db: db, logger: log}
 }
 
-func (r ReceiverRepository) GetAll(filters map[string]string) (receivers []entity.Receiver, totalRecords, currentPage, totalPages int, err error) {
-	defaultLimit := 10
+type ReceiverModel struct {
+	Uuid       uuid.UUID `db:"uuid"`
+	Name       string    `db:"name"`
+	Email      string    `db:"email"`
+	CpfCnpj    string    `db:"cpf_cnpj"`
+	PixKeyType string    `db:"pix_key_type"`
+	PixKey     string    `db:"pix_key"`
+	Status     string    `db:"status"`
+	CreatedAt  time.Time `db:"created_at"`
+	UpdatedAt  time.Time `db:"update_at"`
+}
 
+type GetAllResponse struct {
+	Receivers    []entity.Receiver
+	TotalRecords int
+	TotalPages   int
+	CurrentPage  int
+	Limit        int
+}
+
+func (r ReceiverRepository) GetAll(filters map[string]string) (*GetAllResponse, error) {
+	var response GetAllResponse
+	defaultLimit := 10
 	limit, err := strconv.Atoi(filters["limit"])
 	if err != nil || limit <= 0 {
 		limit = defaultLimit
@@ -44,25 +64,26 @@ func (r ReceiverRepository) GetAll(filters map[string]string) (receivers []entit
 	offset := (page - 1) * limit
 
 	queryCount := "SELECT COUNT(*) FROM receivers"
-	err = r.db.Get(&totalRecords, queryCount)
+	err = r.db.Get(&response.TotalRecords, queryCount)
 	if err != nil {
-		return nil, 0, 0, 0, err
+		return nil, err
 	}
 
-	totalPages = (totalRecords + limit - 1) / limit
-	currentPage = page
+	response.TotalPages = (response.TotalRecords + limit - 1) / limit
+	response.CurrentPage = page
+	response.Limit = limit
 
 	query := "SELECT uuid, name, pix_key_type, pix_key, email, cpf_cnpj, status FROM receivers ORDER BY name LIMIT $1 OFFSET $2"
 	var receiverModels []ReceiverModel
 	if err := r.db.Select(&receiverModels, query, limit, offset); err != nil {
-		return nil, 0, 0, 0, err
+		return nil, err
 	}
 
 	for _, receiver := range receiverModels {
-		receivers = append(receivers, *entity.ToEntity(receiver.Uuid, receiver.Name, receiver.PixKeyType, receiver.PixKey, receiver.Email, receiver.CpfCnpj, receiver.Status))
+		response.Receivers = append(response.Receivers, *entity.ToEntity(receiver.Uuid, receiver.Name, receiver.PixKeyType, receiver.PixKey, receiver.Email, receiver.CpfCnpj, receiver.Status))
 	}
 
-	return receivers, totalRecords, currentPage, totalPages, nil
+	return &response, nil
 }
 
 func (r ReceiverRepository) Create(receiver entity.Receiver) error {
@@ -148,16 +169,4 @@ func (r ReceiverRepository) BulkDelete(uuids []string) error {
 		return err
 	}
 	return nil
-}
-
-type ReceiverModel struct {
-	Uuid       uuid.UUID `db:"uuid"`
-	Name       string    `db:"name"`
-	Email      string    `db:"email"`
-	CpfCnpj    string    `db:"cpf_cnpj"`
-	PixKeyType string    `db:"pix_key_type"`
-	PixKey     string    `db:"pix_key"`
-	Status     string    `db:"status"`
-	CreatedAt  time.Time `db:"created_at"`
-	UpdatedAt  time.Time `db:"update_at"`
 }

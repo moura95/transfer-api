@@ -2,7 +2,6 @@ package receiverservice
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/moura95/transferapi/config"
@@ -76,17 +75,13 @@ func (s *Service) BulkDelete(uuids []string) error {
 	return nil
 }
 
-func (s *Service) List(filters map[string]string) ([]entity.Receiver, response.PageInfo, error) {
-	receivers, totalRecords, currentPage, totalPages, err := s.repository.GetAll(filters)
+func (s *Service) List(filters map[string]string) ([]entity.Receiver, httpresponse.PageInfo, error) {
+	res, err := s.repository.GetAll(filters)
 	if err != nil {
-		return []entity.Receiver{}, response.PageInfo{}, fmt.Errorf("failed to get receiver %s", err.Error())
+		return []entity.Receiver{}, httpresponse.PageInfo{}, fmt.Errorf("failed to get receiver %s", err.Error())
 	}
-	limit, err := strconv.Atoi(filters["limit"])
-	if err != nil || limit <= 0 {
-		limit = 10
-	}
-	pageInfo := response.NewPageInfo(limit, totalRecords, currentPage, totalPages)
-	return receivers, pageInfo, nil
+	pageInfo := httpresponse.NewPageInfo(res.Limit, res.TotalRecords, res.CurrentPage, res.TotalPages)
+	return res.Receivers, pageInfo, nil
 }
 
 func (s *Service) Update(uid uuid.UUID, name, pixKeyType, pixKey, email, CpfCnpj string) error {
