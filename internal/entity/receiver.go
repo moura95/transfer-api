@@ -29,6 +29,18 @@ func NewReceiver(Uuid uuid.UUID, Name, PixKeyType, PixKey, Email, CpfCnpj, Statu
 	}
 }
 
+func ToEntity(Uuid uuid.UUID, Name, PixKeyType, PixKey, Email, CpfCnpj, Status string) *Receiver {
+	return &Receiver{
+		Uuid:       Uuid,
+		Name:       Name,
+		CpfCnpj:    CpfCnpj,
+		PixKeyType: PixKeyType,
+		PixKey:     PixKey,
+		Email:      Email,
+		Status:     Status,
+	}
+}
+
 func (c *Receiver) Validate() error {
 
 	if c.Name == "" {

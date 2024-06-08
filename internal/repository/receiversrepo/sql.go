@@ -28,31 +28,41 @@ func NewReceiverRepository(db *sqlx.DB, log *zap.SugaredLogger) IReceiverReposit
 	return &ReceiverRepository{db: db, logger: log}
 }
 
-func (r ReceiverRepository) GetAll(filters map[string]string) ([]entity.Receiver, error) {
+func (r ReceiverRepository) GetAll(filters map[string]string) (receivers []entity.Receiver, totalRecords, currentPage, totalPages int, err error) {
 	defaultLimit := 10
-	defaultOffset := 0
 
 	limit, err := strconv.Atoi(filters["limit"])
 	if err != nil || limit <= 0 {
 		limit = defaultLimit
 	}
 
-	offset, err := strconv.Atoi(filters["offset"])
-	if err != nil || offset < 0 {
-		offset = defaultOffset
+	page, err := strconv.Atoi(filters["page"])
+	if err != nil || page < 1 {
+		page = 1
 	}
+
+	offset := (page - 1) * limit
+
+	queryCount := "SELECT COUNT(*) FROM receivers"
+	err = r.db.Get(&totalRecords, queryCount)
+	if err != nil {
+		return nil, 0, 0, 0, err
+	}
+
+	totalPages = (totalRecords + limit - 1) / limit
+	currentPage = page
 
 	query := "SELECT uuid, name, pix_key_type, pix_key, email, cpf_cnpj, status FROM receivers ORDER BY name LIMIT $1 OFFSET $2"
-	var receivers []ReceiverModel
-	if err := r.db.Select(&receivers, query, limit, offset); err != nil {
-		return nil, err
+	var receiverModels []ReceiverModel
+	if err := r.db.Select(&receiverModels, query, limit, offset); err != nil {
+		return nil, 0, 0, 0, err
 	}
 
-	var receiversEntity []entity.Receiver
-	for _, receiver := range receivers {
-		receiversEntity = append(receiversEntity, *entity.ToEntity(receiver.Uuid, receiver.Name, receiver.PixKeyType, receiver.PixKey, receiver.Email, receiver.CpfCnpj, receiver.Status))
+	for _, receiver := range receiverModels {
+		receivers = append(receivers, *entity.ToEntity(receiver.Uuid, receiver.Name, receiver.PixKeyType, receiver.PixKey, receiver.Email, receiver.CpfCnpj, receiver.Status))
 	}
-	return receiversEntity, nil
+
+	return receivers, totalRecords, currentPage, totalPages, nil
 }
 
 func (r ReceiverRepository) Create(receiver entity.Receiver) error {

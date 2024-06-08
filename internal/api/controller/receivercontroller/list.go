@@ -10,9 +10,19 @@ import (
 )
 
 func (r *Receiver) list(c *gin.Context) {
-
 	r.logger.Info("List All Receivers")
-	receivers, err := r.service.List()
+
+	filters := map[string]string{
+		"status":        c.Query("status"),
+		"name":          c.Query("name"),
+		"pix_key_type":  c.Query("pix_key_type"),
+		"pix_key_value": c.Query("pix_key_value"),
+		"limit":         c.Query("limit"),
+		"page":          c.Query("page"),
+	}
+
+	receivers, pageinfo, err := r.service.List(filters)
+
 	if err != nil {
 		r.logger.Error(err)
 		c.JSON(http.StatusInternalServerError, httpRes.ErrorResponse(errors.FailedToList("Receivers")))
@@ -33,5 +43,5 @@ func (r *Receiver) list(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, httpRes.SuccessResponse(response))
+	c.JSON(http.StatusOK, httpRes.SuccessResponseWithPageInfo(response, pageinfo))
 }
