@@ -1,8 +1,6 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	"github.com/moura95/transferapi/config"
@@ -13,10 +11,6 @@ import (
 )
 
 func CreateRoutesV1(store *sqlx.DB, cfg *config.Config, router *gin.Engine, log *zap.SugaredLogger) {
-	router.GET("/healthz", func(c *gin.Context) {
-		c.Status(http.StatusNoContent)
-	})
-
 	routes := router.Group("/")
 	// Instance Receiver Repository Postgres
 	receiverRepository := receiverrepo.NewReceiverRepository(store, log)

@@ -1,0 +1,237 @@
+definitions:
+  dto.CreateReceiverInputDto:
+    properties:
+      cpf_cnpj:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      pix_key:
+        type: string
+      pix_key_type:
+        type: string
+      status:
+        type: string
+    type: object
+  dto.DeleteReceiverInputDto:
+    properties:
+      uuids:
+        items:
+          type: string
+        type: array
+    type: object
+  dto.ReceiverOutputDto:
+    properties:
+      cpf_cnpj:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      pix_key:
+        type: string
+      pix_key_type:
+        type: string
+      status:
+        type: string
+      uuid:
+        type: string
+    type: object
+  dto.UpdateReceiverInputDto:
+    properties:
+      cpf_cnpj:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      pix_key:
+        type: string
+      pix_key_type:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /bulk-delete/receiver:
+    put:
+      consumes:
+      - application/json
+      description: Bulk delete array of uuids receivers
+      parameters:
+      - description: Receiver
+        in: body
+        name: receiver
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteReceiverInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Bulk Delete receiver
+      tags:
+      - receiver
+  /receiver:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all receivers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ReceiverOutputDto'
+            type: array
+      summary: List all receivers
+      tags:
+      - receivers
+    post:
+      consumes:
+      - application/json
+      description: Add a new receiver with the provided information
+      parameters:
+      - description: Receiver
+        in: body
+        name: receiver
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateReceiverInputDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Ok
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Add a new receiver
+      tags:
+      - receiver
+  /receiver/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete with the given ID
+      parameters:
+      - description: UUID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ReceiverOutputDto'
+        "404":
+          description: Not Found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: delete a receiver by UUID
+      tags:
+      - receiver
+    get:
+      consumes:
+      - application/json
+      description: Get details of a receiver with the given ID
+      parameters:
+      - description: UUID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ReceiverOutputDto'
+        "404":
+          description: Not Found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get a receiver by UUID
+      tags:
+      - receiver
+    patch:
+      consumes:
+      - application/json
+      description: Update a receiver with the given ID
+      parameters:
+      - description: UUID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Receiver
+        in: body
+        name: receiver
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateReceiverInputDto'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Update a receiver
+      tags:
+      - receiver
+swagger: "2.0"

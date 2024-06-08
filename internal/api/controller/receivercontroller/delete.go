@@ -9,6 +9,15 @@ import (
 	httpRes "github.com/moura95/transferapi/pkg/response"
 )
 
+// @Summary delete a receiver by UUID
+// @Description delete with the given ID
+// @Tags receiver
+// @Accept json
+// @Produce json
+// @Param id path int true "UUID"
+// @Success 200 {object} dto.ReceiverOutputDto
+// @Failure 404 {object} object{error=string}
+// @Router /receiver/{id} [delete]
 func (r *Receiver) hardDelete(ctx *gin.Context) {
 
 	r.logger.Info("Delete UUID Receiver")

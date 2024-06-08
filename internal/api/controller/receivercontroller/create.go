@@ -9,6 +9,15 @@ import (
 	httpRes "github.com/moura95/transferapi/pkg/response"
 )
 
+// @Summary Add a new receiver
+// @Description Add a new receiver with the provided information
+// @Tags receiver
+// @Accept json
+// @Produce json
+// @Param receiver body dto.CreateReceiverInputDto true "Receiver"
+// @Success 201 {object} object{message=string} "Ok"
+// @Failure 400 {object} object{error=string}
+// @Router /receiver [post]
 func (r *Receiver) create(ctx *gin.Context) {
 	var req dto.CreateReceiverInputDto
 	r.logger.Info("Create Receiver")

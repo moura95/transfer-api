@@ -10,6 +10,15 @@ import (
 	httpRes "github.com/moura95/transferapi/pkg/response"
 )
 
+// @Summary Get a receiver by UUID
+// @Description Get details of a receiver with the given ID
+// @Tags receiver
+// @Accept json
+// @Produce json
+// @Param id path int true "UUID"
+// @Success 200 {object} dto.ReceiverOutputDto
+// @Failure 404 {object} object{error=string}
+// @Router /receiver/{id} [get]
 func (r *Receiver) get(ctx *gin.Context) {
 
 	r.logger.Info("Get By UUID Receivers")

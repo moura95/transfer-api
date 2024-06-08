@@ -51,7 +51,7 @@ func (c *Receiver) Validate() error {
 	}
 
 	if validateEmail(c.Email) == false {
-		return errors.New("email is required")
+		return errors.New("email invalid")
 	}
 
 	if validatePixKeyType(c.PixKeyType) == false {
@@ -67,16 +67,16 @@ func (c *Receiver) Validate() error {
 func (r *Receiver) ValidateUpdate() error {
 	if r.Status == "Validado" {
 		if r.Name != "" {
-			return errors.New("cannot update the name when status is 'Validado'")
+			return errors.New("cannot update the name when status is Validado")
 		}
 		if r.CpfCnpj != "" {
-			return errors.New("cannot update the CPF/CNPJ when status is 'Validado'")
+			return errors.New("cannot update the CPF/CNPJ when status is Validado")
 		}
 		if r.PixKeyType != "" {
-			return errors.New("cannot update the PixKeyType when status is 'Validado'")
+			return errors.New("cannot update the PixKeyType when status is Validado")
 		}
 		if r.PixKey != "" {
-			return errors.New("cannot update the PixKey when status is 'Validado'")
+			return errors.New("cannot update the PixKey when status is Validado")
 		}
 	}
 	return nil

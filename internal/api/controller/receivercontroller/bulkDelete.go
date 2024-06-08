@@ -10,6 +10,16 @@ import (
 	httpRes "github.com/moura95/transferapi/pkg/response"
 )
 
+// @Summary Bulk Delete receiver
+// @Description Bulk delete array of uuids receivers
+// @Tags receiver
+// @Accept json
+// @Produce json
+// @Param receiver body dto.DeleteReceiverInputDto true "Receiver"
+// @Success 200 {object} object{message=string} "Ok"
+// @Failure 400 {object} object{error=string}
+// @Failure 404 {object} object{error=string}
+// @Router /bulk-delete/receiver [put]
 func (r *Receiver) bulkDelete(ctx *gin.Context) {
 	var req dto.DeleteReceiverInputDto
 	r.logger.Info("Bulk Delete UUIDs Receiver")

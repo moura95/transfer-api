@@ -9,6 +9,13 @@ import (
 	httpRes "github.com/moura95/transferapi/pkg/response"
 )
 
+// @Summary List all receivers
+// @Description Get a list of all receivers
+// @Tags receivers
+// @Accept json
+// @Produce json
+// @Success 200 {array} dto.ReceiverOutputDto
+// @Router /receiver [get]
 func (r *Receiver) list(c *gin.Context) {
 	r.logger.Info("List All Receivers")
 
