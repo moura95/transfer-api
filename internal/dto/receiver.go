@@ -1,10 +1,12 @@
 package dto
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type CreateReceiverInputDto struct {
 	Name       string `json:"name"`
-	Cpf        string `json:"cpf"`
+	CpfCnpj    string `json:"cpf_cnpj"`
 	PixKeyType string `json:"pix_key_type"`
 	PixKey     string `json:"pix_key"`
 	Email      string `json:"email"`
@@ -13,7 +15,7 @@ type CreateReceiverInputDto struct {
 
 type UpdateReceiverInputDto struct {
 	Name       string `json:"name"`
-	Cpf        string `json:"cpf"`
+	CpfCnpj    string `json:"cpf_cnpj"`
 	PixKeyType string `json:"pix_key_type"`
 	PixKey     string `json:"pix_key"`
 	Email      string `json:"email"`
@@ -22,15 +24,11 @@ type UpdateReceiverInputDto struct {
 type ReceiverOutputDto struct {
 	Uuid       uuid.UUID `json:"uuid"`
 	Name       string    `json:"name"`
-	Cpf        string    `json:"cpf"`
+	CpfCnpj    string    `json:"cpf_cnpj"`
 	PixKeyType string    `json:"pix_key_type"`
 	PixKey     string    `json:"pix_key"`
 	Email      string    `json:"email"`
 	Status     string    `json:"status"`
-}
-
-type ReceiverListOutputDto struct {
-	Receivers []ReceiverOutputDto `json:"receivers"`
 }
 
 type DeleteReceiverInputDto struct {
