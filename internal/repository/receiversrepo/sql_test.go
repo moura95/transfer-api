@@ -62,6 +62,25 @@ func TestMain(m *testing.M) {
 
 	m.Run()
 }
+func TestReceiverRepository_GetById(t *testing.T) {
+	conn, err := db.ConnectPostgres(connStr)
+	if err != nil {
+		t.Fatalf("Failed to connect to the database: %v", err)
+	}
+	store := conn.DB()
+	uid := uuid.MustParse("3ee27437-fdb6-48ce-85f4-0b16e046c82a")
+	receiverRepo := NewReceiverRepository(store)
+	receiver, err := receiverRepo.GetByID(uid)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "Lucas Lima", receiver.Name)
+	assert.Equal(t, "44455566677", receiver.CpfCnpj)
+	assert.Equal(t, "CHAVE_ALEATORIA", receiver.PixKeyType)
+	assert.Equal(t, "5a8f9e2a-9eaf-4f6a-a15c-24b5eae1d452", receiver.PixKey)
+	assert.Equal(t, "lucas.lima@example.com", receiver.Email)
+	assert.Equal(t, "Validado", receiver.Status)
+
+}
 
 func TestReceiverRepository_CreateAndGetAllWithFilter(t *testing.T) {
 	conn, err := db.ConnectPostgres(connStr)
