@@ -70,16 +70,6 @@ func (r ReceiverRepository) GetAll(filters entity.Filter) (*GetAllResponse, erro
 
 	offset := (filters.Page - 1) * filters.Limit
 
-	queryCount := "SELECT COUNT(*) FROM receivers"
-	err := r.db.Get(&response.TotalRecords, queryCount)
-	if err != nil {
-		return nil, err
-	}
-
-	response.TotalPages = (response.TotalRecords + filters.Limit - 1) / filters.Limit
-	response.CurrentPage = filters.Page
-	response.Limit = filters.Limit
-
 	var receiverModels []ReceiverModel
 	if err := r.db.Select(&receiverModels, query, filters.Limit, offset); err != nil {
 		return nil, err
@@ -88,6 +78,11 @@ func (r ReceiverRepository) GetAll(filters entity.Filter) (*GetAllResponse, erro
 	for _, receiver := range receiverModels {
 		response.Receivers = append(response.Receivers, *entity.ToEntity(receiver.Uuid, receiver.Name, receiver.PixKeyType, receiver.PixKey, receiver.Email, receiver.CpfCnpj, receiver.Status))
 	}
+
+	response.TotalRecords = len(receiverModels)
+	response.TotalPages = (response.TotalRecords + filters.Limit - 1) / filters.Limit
+	response.CurrentPage = filters.Page
+	response.Limit = filters.Limit
 
 	return &response, nil
 }
