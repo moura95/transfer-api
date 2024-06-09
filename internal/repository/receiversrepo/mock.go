@@ -7,12 +7,12 @@ import (
 	"github.com/moura95/transferapi/internal/entity"
 )
 
-type ReceiverRepositoryMemory struct {
+type ReceiverRepositoryMock struct {
 	receivers []entity.Receiver
 }
 
-func NewMemoryReceiverRepository() *ReceiverRepositoryMemory {
-	return &ReceiverRepositoryMemory{
+func NewMockReceiverRepository() *ReceiverRepositoryMock {
+	return &ReceiverRepositoryMock{
 		receivers: []entity.Receiver{
 			{
 				Uuid:       uuid.MustParse("4c57ae7f-0eb0-4bfe-9c62-d9a87880ea61"),
@@ -64,7 +64,7 @@ func NewMemoryReceiverRepository() *ReceiverRepositoryMemory {
 	}
 }
 
-func (r *ReceiverRepositoryMemory) GetAll(filters entity.Filter) (*GetAllResponse, error) {
+func (r *ReceiverRepositoryMock) GetAll(filters entity.Filter) (*GetAllResponse, error) {
 	var response GetAllResponse
 	defaultLimit := 10
 
@@ -95,12 +95,12 @@ func (r *ReceiverRepositoryMemory) GetAll(filters entity.Filter) (*GetAllRespons
 	return &response, nil
 }
 
-func (r *ReceiverRepositoryMemory) Create(receiver entity.Receiver) error {
+func (r *ReceiverRepositoryMock) Create(receiver entity.Receiver) error {
 	r.receivers = append(r.receivers, receiver)
 	return nil
 }
 
-func (r *ReceiverRepositoryMemory) GetByID(u uuid.UUID) (*entity.Receiver, error) {
+func (r *ReceiverRepositoryMock) GetByID(u uuid.UUID) (*entity.Receiver, error) {
 	for _, rec := range r.receivers {
 		if rec.Uuid == u {
 			return &rec, nil
@@ -110,7 +110,7 @@ func (r *ReceiverRepositoryMemory) GetByID(u uuid.UUID) (*entity.Receiver, error
 
 }
 
-func (r ReceiverRepositoryMemory) Update(uid uuid.UUID, receiver *entity.Receiver) error {
+func (r ReceiverRepositoryMock) Update(uid uuid.UUID, receiver *entity.Receiver) error {
 	for _, rec := range r.receivers {
 		if rec.Uuid == uid {
 			if rec.Status == "Validado" {
@@ -131,7 +131,7 @@ func (r ReceiverRepositoryMemory) Update(uid uuid.UUID, receiver *entity.Receive
 	return errors.New("Failed to updated")
 }
 
-func (r ReceiverRepositoryMemory) HardDelete(uid uuid.UUID) error {
+func (r ReceiverRepositoryMock) HardDelete(uid uuid.UUID) error {
 	for i, rec := range r.receivers {
 		if rec.Uuid == uid {
 			r.receivers = append(r.receivers[:i], r.receivers[i+1:]...)
@@ -141,7 +141,7 @@ func (r ReceiverRepositoryMemory) HardDelete(uid uuid.UUID) error {
 	return errors.New("receiver not found")
 }
 
-func (r *ReceiverRepositoryMemory) BulkDelete(strings []string) error {
+func (r *ReceiverRepositoryMock) BulkDelete(strings []string) error {
 
 	panic("implement me")
 }
