@@ -38,11 +38,16 @@ Start Service
 
 
 Running Tests
+
+Or
 ```bash
-go test -cover ./...
+make test
+```
+```bash
+go test -v ./...
 ```
 
-Swagger
+Swagger:
 http://localhost:8080/swagger/index.html
 
 ![img](docs/swagger.png)
