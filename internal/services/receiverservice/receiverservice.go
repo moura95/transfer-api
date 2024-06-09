@@ -85,14 +85,8 @@ type ListRequest struct {
 }
 
 func (s *Service) List(filters ListRequest) ([]entity.Receiver, ginx.PageInfo, error) {
-	res, err := s.repository.GetAll(entity.Filter{
-		Status:      filters.Status,
-		Name:        filters.Name,
-		PixKeyType:  filters.PixKeyType,
-		PixKeyValue: filters.PixKeyValue,
-		Limit:       filters.Limit,
-		Page:        filters.Page,
-	})
+	res, err := s.repository.GetAll(
+		entity.NewFilter(filters.Status, filters.Name, filters.PixKeyType, filters.PixKeyValue, filters.Limit, filters.Page))
 	if err != nil {
 		return []entity.Receiver{}, ginx.PageInfo{}, fmt.Errorf("failed to get receiver %s", err.Error())
 	}

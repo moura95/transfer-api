@@ -13,7 +13,7 @@ import (
 func CreateRoutesV1(store *sqlx.DB, cfg *config.Config, router *gin.Engine, log *zap.SugaredLogger) {
 	routes := router.Group("/")
 	// Instance Receiver Repository Postgres
-	receiverRepository := receiverrepo.NewReceiverRepository(store, log)
+	receiverRepository := receiverrepo.NewReceiverRepository(store)
 	// Instance Receiver Service with Postgres
 	receiverService := receiverservice.NewReceiverService(receiverRepository, *cfg, log)
 

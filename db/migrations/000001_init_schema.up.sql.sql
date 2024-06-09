@@ -8,7 +8,7 @@ CREATE TABLE receivers (
      pix_key_type VARCHAR(20) NOT NULL CHECK (pix_key_type IN ('CPF', 'CNPJ', 'EMAIL', 'TELEFONE', 'CHAVE_ALEATORIA')),
      pix_key VARCHAR(140) NOT NULL,
      email VARCHAR(250) UNIQUE NOT NULL,
-     status VARCHAR(20) NOT NULL CHECK (status IN ('Validado', 'Rascunho')),
+     status VARCHAR(20) DEFAULT 'Rascunho' NOT NULL CHECK (status IN ('Validado', 'Rascunho')),
      created_at    TIMESTAMP    NOT NULL DEFAULT NOW(),
      update_at    TIMESTAMP    NOT NULL DEFAULT NOW()
 );

@@ -10,16 +10,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/moura95/transferapi/internal/entity"
-	"go.uber.org/zap"
 )
 
 type ReceiverRepository struct {
-	db     *sqlx.DB
-	logger *zap.SugaredLogger
+	db *sqlx.DB
 }
 
-func NewReceiverRepository(db *sqlx.DB, log *zap.SugaredLogger) IReceiverRepository {
-	return &ReceiverRepository{db: db, logger: log}
+func NewReceiverRepository(db *sqlx.DB) IReceiverRepository {
+	return &ReceiverRepository{db: db}
 }
 
 type ReceiverModel struct {

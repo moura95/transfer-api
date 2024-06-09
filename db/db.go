@@ -3,7 +3,6 @@ package db
 import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/moura95/transferapi/config"
 )
 
 type Connection interface {
@@ -15,10 +14,9 @@ type conn struct {
 	db *sqlx.DB
 }
 
-func ConnectPostgres() (Connection, error) {
-	loadConfig, _ := config.LoadConfig(".")
+func ConnectPostgres(connStr string) (Connection, error) {
 
-	db, err := sqlx.Open("postgres", loadConfig.DBSource)
+	db, err := sqlx.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
 	}

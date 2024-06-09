@@ -15,7 +15,8 @@ func main() {
 	loadConfig, _ := config.LoadConfig(".")
 
 	// instance Db
-	conn, err := db.ConnectPostgres()
+
+	conn, err := db.ConnectPostgres(loadConfig.DBSource)
 	store := conn.DB()
 	if err != nil {
 		fmt.Println("Failed to Connected Database")
