@@ -127,7 +127,7 @@ func TestReceiverRepository_GetAll(t *testing.T) {
 	assert.Equal(t, "CHAVE_ALEATORIA", response.Receivers[20].PixKeyType)
 	assert.Equal(t, "5a8f9e2a-9eaf-4f6a-a15c-24b5eae1d451", response.Receivers[20].PixKey)
 	assert.Equal(t, "gabrielllla.santos@example.com", response.Receivers[20].Email)
-	assert.Equal(t, "Rascunho", response.Receivers[0].Status)
+	assert.Equal(t, "Validado", response.Receivers[20].Status)
 
 	// Receiver 32
 	assert.Equal(t, "Juliana Almeida", response.Receivers[32].Name)
