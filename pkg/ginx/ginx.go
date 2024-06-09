@@ -33,13 +33,17 @@ func ParseUri(c *gin.Context, obj interface{}) error {
 }
 
 type Response struct {
+	Error interface{} `json:"error"`
+	Data  interface{} `json:"data"`
+}
+type ResponseWithPageInfo struct {
 	Error    interface{} `json:"error"`
 	Data     interface{} `json:"data"`
 	PageInfo PageInfo    `json:"pageInfo"`
 }
 
-func SuccessResponseWithPageInfo(data interface{}, pageInfo PageInfo) Response {
-	return Response{
+func SuccessResponseWithPageInfo(data interface{}, pageInfo PageInfo) ResponseWithPageInfo {
+	return ResponseWithPageInfo{
 		Data:     data,
 		Error:    "",
 		PageInfo: pageInfo,
